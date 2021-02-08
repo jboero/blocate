@@ -8,7 +8,7 @@ Release:	0%{?dist}
 Summary:	Blocate directory indexing and searching.
 License:	GPL
 Source0:    https://github.com/jboero/blocate/archive/main.tar.gz
-Requires:   sqlite-3 xargs bash
+Requires:   sqlite xargs bash
 URL:        https://github.com/jboero/blocate
 
 %define debug_package %{nil}
@@ -23,7 +23,7 @@ A sqlite-based slocate and mlocate alternative using simple scripts.
 
 %install
 mkdir -p %{buildroot}%{_bindir}/
-cp -p blocate bindex %{buildroot}%{_bindir}/
+cp -p blocate-main/blocate blocate-main/bindex %{buildroot}%{_bindir}/
 
 %clean
 rm -rf %{buildroot}
