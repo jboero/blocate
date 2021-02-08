@@ -15,14 +15,14 @@ function findpath()
 	fi
 	IFS='|' read -r -a a <<< "$r"
 	findpath "${a[1]}"
-	echo -n "${a[2]}/"
+	echo -n "/${a[2]}"
 }
 
 export -f findpath
 # Normal search uses like, parallel 10 procs by default (readonly).
 sqlite3 -readonly "$BINDEXDB" "select id from inode_v1 where name like '$1';" | \
-	xargs -n 1 -P 10 -I {} bash -c 'findpath $@; echo ""' _ {}
+	xargs -n 1 -P 10 -I {} bash -c 'findpath $@ && echo ""' _ {}
 
 # Regex option:
 #sqlite3 -readonly "$BINDEXDB" "select id from inode_v1 where name regex '$1';" | \
-#	xargs -n 1 -P 10 -I {} bash -c 'findpath $@; echo ""' _ {}
+#	xargs -n 1 -P 10 -I {} bash -c 'findpath $@; echo -en "\b\n  "' _ {}

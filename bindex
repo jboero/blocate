@@ -14,7 +14,7 @@ sqlite3 "$BINDEXDB" \
 # Locals used because I started with recursion.
 index()
 {
-	local name=$(basename "$1" | sed "s/'/\\'/g" )
+	local name=$(basename "$1" | sed "s/'/''/g" )
 	local pare=$(dirname "$1")
 	local ino=$(ls -di "$1" | awk '{print $1}')
 	local pino=$(ls -di "$pare" | awk '{print $1}')
