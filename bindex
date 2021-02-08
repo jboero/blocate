@@ -10,7 +10,6 @@ export BINDEXDB="${BINDEXDB:-${2:-blocate.sqlite}}"
 sqlite3 "$BINDEXDB" \
 	"CREATE TABLE IF NOT EXISTS inode_v1 (id int NOT NULL PRIMARY KEY, parent int, name varchar(256));"
 
-
 # Index a single path by just inode, parent inode, and name.
 # Locals used because I started with recursion.
 index()
