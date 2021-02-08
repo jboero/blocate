@@ -4,7 +4,7 @@
 
 Name:		blocate
 Version:	1.0
-Release:	0%{?dist}
+Release:	1%{?dist}
 Summary:	Blocate directory indexing and searching.
 License:	GPL
 Source0:    https://github.com/jboero/blocate/archive/main.tar.gz
