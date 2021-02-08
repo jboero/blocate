@@ -10,12 +10,12 @@ ARG2 is optional path to index file default `./blocate.sqlite` for `blocate` or 
 
 Usage:
 ```
-bindex /path/to/file [sqlite file]
-bindex /path/to/dir/ [sqlite file]
+bindex /path/to/file [sqlite index file]
+bindex /path/to/dir/ [sqlite index file]
 ```
 Searching:
 ```
-blocate "%yoursearch%"
+blocate "%yoursearch%" [sqlite index file]
 ```
 
 Current version 1 simply has one table with three fields:
