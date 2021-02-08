@@ -4,11 +4,11 @@
 
 Name:		blocate
 Version:	1.0
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	Blocate directory indexing and searching.
 License:	GPL
 Source0:    https://github.com/jboero/blocate/archive/main.tar.gz
-Requires:   sqlite xargs bash
+Requires:   sqlite findutils bash
 URL:        https://github.com/jboero/blocate
 
 %define debug_package %{nil}
