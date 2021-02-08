@@ -15,14 +15,15 @@ sqlite3 "$BINDEXDB" \
 # Locals used because I started with recursion.
 index()
 {
-	local name=$(echo $(basename "$1") | sed "s/'/\\'/g")
+	local name=$(basename "$1" | sed "s/'/\\'/g" )
+	local pare=$(dirname "$1")
 	local ino=$(ls -di "$1" | awk '{print $1}')
-	local pino=$(ls -di $(dirname "$1") | awk '{print $1}')
+	local pino=$(ls -di "$pare" | awk '{print $1}')
 	# Don't index self where ino=pino (loop).  Also beware symlinks.
 	if [ $ino -eq $pino ]; then
 		return
 	fi
-	sqlite3 -cmd ".timeout 1000" "$BINDEXDB" \
+	sqlite3 -cmd ".timeout 2000" "$BINDEXDB" \
 		"insert or replace into inode_v1 (id, parent, name) values ($ino, $pino, '$name');"
 }
 
@@ -32,5 +33,5 @@ export -f index
 if [[ -f "$tgt" ]]; then
 	index "$tgt"
 elif [[ -d "$tgt" ]]; then
-	find "$tgt" -type d | xargs -n 1 -P 4 -I {} bash -c 'index "$@"' _ {}
+	find "$tgt" -type d | xargs -n 1 -P 10 -I {} bash -c 'index "$@"' _ {}
 fi
