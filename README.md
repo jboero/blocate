@@ -1,6 +1,6 @@
 # Blocate
 A Q&amp;D slocate/mlocate alternative which provides basic fs indexing and search via SQLite.  Highly customizable.
-Files and folders can be added to and index individually or in bulk via the bindex script.  The `find` command 
+Files and folders can be added to an index individually or in bulk via the bindex script.  The `find` command 
 can be used to do specific index builds, by filename, type, size, etc.  Directory indexing does parallel iteration over
 a `find` search result to index subdirectories.  It does not include files by default.  Sqlite file index requires 
 no special permissions or ownership and defaults to current user ownership and umask.
@@ -33,4 +33,6 @@ SQLite database is locked. Using  `.timeout 1000` allows sqlite3 time to wait fo
 pretty but this is a super simple solution without requiring a dedicated database service.
 
 Searching begins with a single query to fetch all inodes matching `blocate` arg1.  Then it traverses those paths with 
-`xargs` in parallel opening the sqlite index in `read` mode to allow concurrent access.
+`xargs` in parallel opening the sqlite index in `read` mode to allow concurrent access.  Tuning the parallel options 
+can have a great influence on performance, but generally it scales out very well for just a SQLite DB as long as you're 
+using readonly.
