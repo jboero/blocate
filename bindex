@@ -18,6 +18,10 @@ index()
 	local name=$(echo $(basename "$1") | sed "s/'/\\'/g")
 	local ino=$(ls -di "$1" | awk '{print $1}')
 	local pino=$(ls -di $(dirname "$1") | awk '{print $1}')
+	# Don't index . whose ino=pino, and creates a loop.  Also beware symlinks.
+	if [[ "$name" = "." ]]; then
+		return
+	fi
 	sqlite3 -cmd ".timeout 1000" "$BINDEXDB" \
 		"insert or replace into inode_v1 (id, parent, name) values ($ino, $pino, '$name');"
 }
