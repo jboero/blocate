@@ -1,0 +1,29 @@
+#!/bin/bash
+# Blocate v1.0
+# boeroboy@gmail.com
+# Use this to search a SQLite bindex.
+# Basic search uses LIKE but REGEX is optional as well.
+# Search cannot use wholepath - only dir or file names.
+export db=$(realpath "${2:-blocate.sqlite}")
+exit
+
+function findpath()
+{
+	local a
+	local r=$(sqlite3 -readonly "$db" "select id, parent, name from inode_v1 where id = $1;")
+	if [ -z "$r" ] ; then
+		return
+	fi
+	IFS='|' read -r -a a <<< "$r"
+	findpath "${a[1]}"
+	echo -n "${a[2]}/"
+}
+
+export -f findpath
+# Normal search uses like
+sqlite3 -readonly "$db" "select id from inode_v1 where name like '$1';" | \
+	xargs -n 1 -P 10 -I {} bash -c 'findpath $@; echo ""' _ {}
+
+# Regex option:
+#sqlite3 -readonly "$db" "select id from inode where name regex '$1';" | \
+#	xargs -n 1 -P 10 -I {} bash -c 'findpath $@; echo ""' _ {}

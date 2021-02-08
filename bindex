@@ -1,0 +1,32 @@
+#!/bin/bash
+# Bindex v1.0
+# boeroboy@gmail.com
+# Use this to index a simple file or directory to SQLite.
+# Paired with blocate search. Find command and parallel options can be adjusted.
+# This version does not support multiple filesystems with inode as prim key.
+export tgt="${1:-.}"
+export BINDEXDB="${BINDEXDB:-${2:-blocate.sqlite}}"
+
+sqlite3 "$BINDEXDB" \
+	"CREATE TABLE IF NOT EXISTS inode_v1 (id int NOT NULL PRIMARY KEY, parent int, name varchar(256));"
+
+
+# Index a single path by just inode, parent inode, and name.
+# Locals used because I started with recursion.
+index()
+{
+	local name=$(echo $(basename "$1") | sed "s/'/\\'/g")
+	local ino=$(ls -di "$1" | awk '{print $1}')
+	local pino=$(ls -di $(dirname "$1") | awk '{print $1}')
+	sqlite3 -cmd ".timeout 1000" "$BINDEXDB" \
+		"insert or replace into inode_v1 (id, parent, name) values ($ino, $pino, '$name');"
+}
+
+export -f index
+
+# If path given is a file, add it to index.  Otherwise find traverse index.
+if [[ -f "$tgt" ]]; then
+	index "$tgt"
+elif [[ -d "$tgt" ]]; then
+	find "$tgt" -type d | xargs -n 1 -P 4 -I {} bash -c 'index "$@"' _ {}
+fi
