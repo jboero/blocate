@@ -8,10 +8,11 @@ no special permissions or ownership and defaults to current user ownership and u
 ARG1 is search string for `blocate` or index target for `bindex`.
 ARG2 is optional path to index file default `./blocate.sqlite` for `blocate` or `bindex`.
 
-Usage:
+Indexing without args defaults to pwd saving to default `./blocate.sqlite`: `bindex .`
 ```
-bindex /path/to/file [./blocate.sqlite]
-bindex /path/to/dir/ [./blocate.sqlite]
+bindex
+bindex [/path/to/file] [./blocate.sqlite]
+bindex [/path/to/dir/] [./blocate.sqlite]
 ```
 or index a list or `find` command from stdin:
 ```
