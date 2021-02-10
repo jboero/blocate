@@ -2,7 +2,7 @@
 A Q&amp;D slocate/mlocate alternative which provides basic fs indexing and search via SQLite.  Highly customizable.
 Files and folders can be added to an index individually or in bulk via the bindex script.  The `find` command 
 can be used to do specific index builds, by filename, type, size, etc.  Directory indexing does parallel iteration over
-a `find` search result to index subdirectories.  It does not include files by default.  Sqlite file index requires 
+a `find` search result to index subdirectories.  Directory indexing does not include files by default.  Easiest way to index files is to pipe results from a `find` command.  Sqlite file index requires 
 no special permissions or ownership and defaults to current user ownership and umask.
 
 ARG1 is search string for `blocate` or index target for `bindex`.
