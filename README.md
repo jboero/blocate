@@ -13,11 +13,18 @@ Usage:
 bindex /path/to/file [./blocate.sqlite]
 bindex /path/to/dir/ [./blocate.sqlite]
 ```
+or index a list or `find` command from stdin:
+```
+find . -type d -or -type f -iname '*.doc' -mtime +1 | bindex [./blocate.sqlite]
+```
 Searching:
 ```
 blocate "%yoursearch%" [./blocate.sqlite]
 ```
-
+if you have sqlite pcre installed you can use regex:
+```
+blocate -r "YOURREGEXP" [./blocate.sqlite]
+```
 Current version 1 simply has one table with three fields:
 1. ID (Inode int)
 2. Parent (Inode int)
