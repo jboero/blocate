@@ -8,7 +8,7 @@ Release:	0%{?dist}
 Summary:	Blocate directory indexing and searching.
 License:	MPL
 Source0:    https://github.com/jboero/blocate/archive/main.tar.gz
-Requires:   sqlite findutils bash
+Requires:   sqlite findutils bash parallel
 URL:        https://github.com/jboero/blocate
 
 %define debug_package %{nil}
