@@ -1,15 +1,13 @@
 #!/bin/bash
-# Blocate v1.0
-# boeroboy@gmail.com
-# Use this to search a SQLite bindex.
-# Basic search uses LIKE but REGEX is optional as well.
-# Search cannot use wholepath - only dir or file names.
-export BINDEXDB="${BINDEXDB:-${2:-blocate.sqlite}}"
+# Blocate v1.1 - MPL - John Boero - boeroboy@gmail.com
+export BLOCATEPARA=${BLOCATEPARA:-10}
+export COMPARE=LIKE
 
 function findpath()
 {
 	local a
-	local r=$(sqlite3 -readonly "$BINDEXDB" "select id, parent, name from inode_v1 where id = $1;")
+	local r=$(sqlite3 -readonly "$BINDEXDB" \
+		"select id, parent, name from inode_v1 where id = $1;")
 	if [[ -z "$r" ]]; then
 		return
 	fi
@@ -18,11 +16,16 @@ function findpath()
 	echo -n "/${a[2]}"
 }
 
-export -f findpath
-# Normal search uses like, parallel 10 procs by default (readonly).
-sqlite3 -readonly "$BINDEXDB" "select id from inode_v1 where name like '$1';" | \
-	xargs -n 1 -P 10 -I {} bash -c 'findpath $@ && echo ""' _ {}
+while getopts ":rh" opt; do
+  case ${opt} in
+    r ) export COMPARE=REGEXP ;;
+    h ) echo "Usage: blocate [-r regex] search [./blocate.sqlite]" ; exit ;;
+  esac
+  shift $((OPTIND -1))
+done
 
-# Regex option:
-#sqlite3 -readonly "$BINDEXDB" "select id from inode_v1 where name regex '$1';" | \
-#	xargs -n 1 -P 10 -I {} bash -c 'findpath $@; echo -en "\b\n  "' _ {}
+export SEARCH=$(echo $1 | sed "s/'/''/g")
+export BINDEXDB="${BINDEXDB:-${2:-blocate.sqlite}}"
+export -f findpath
+sqlite3 -readonly "$BINDEXDB" "select id from inode_v1 where name $COMPARE '$SEARCH';" | \
+	parallel --max-procs=$BLOCATEPARA 'findpath {} ; echo'
