@@ -15,8 +15,8 @@ A Q&D slocate/mlocate alternative which provides basic fs indexing and search vi
 ARG1 is optional index root for `bindex` default to pwd `.`.ARG2 is optional path to index file default `./blocate.sqlite`.If you pass stdin to `bindex` then optional ARG1 is expected to be db location.Indexing without args defaults to pwd saving to default `./blocate.sqlite`: `bindex .`Indexing uses parallel which is possible with sqlite locking using a timeout of 2s.  If you are indexing to slow storage or over networks you may want to drop parallelism via env var `$BINDEXPARA` or `$BLOCATEPARA` or just index to tmpfs before copying to network.
 
     bindex
-    bindex [/path/to/file] [./blocate.sqlite]
-    bindex [/path/to/dir/] [./blocate.sqlite]
+    bindex /path/to/file [./blocate.sqlite]
+    bindex /path/to/dir/ [./blocate.sqlite]
 
 or index a list or `find` command from stdin:
 
